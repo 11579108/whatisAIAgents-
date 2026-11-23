@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Agents 是什麼？教學簡報</title>
+<style>
+:root{--bg:#fafaf7;--card:#fff;--tx:#1d2330;--mut:#5b6475;--ac:#2f5bd8;--bd:#e2e4ea;--ok:#1f8a4c;--warn:#b4560b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13161d;--card:#1c212b;--tx:#e8ebf2;--mut:#9aa3b5;--ac:#7fa2ff;--bd:#2d3443;--ok:#52c27f;--warn:#f0a35e}}
+:root[data-theme="dark"]{--bg:#13161d;--card:#1c212b;--tx:#e8ebf2;--mut:#9aa3b5;--ac:#7fa2ff;--bd:#2d3443;--ok:#52c27f;--warn:#f0a35e}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.75 -apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.7rem;line-height:1.3;margin:.2em 0}
+h2{font-size:1.25rem;margin:0 0 .5em;color:var(--ac)}
+h3{font-size:1.05rem;margin:1em 0 .3em}
+.sub{color:var(--mut);margin:0 0 1.2em}
+section{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px 18px;margin:14px 0}
+.big{font-size:1.15rem;font-weight:600}
+.tag{display:inline-block;font-size:.78rem;padding:1px 9px;border-radius:99px;border:1px solid var(--bd);color:var(--mut);margin-right:4px}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.box{border:1px solid var(--bd);border-radius:10px;padding:10px 12px}
+.box b{display:block;color:var(--ac)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:520px}
+th,td{border:1px solid var(--bd);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--bg)}
+.ok{color:var(--ok)}.warn{color:var(--warn)}
+.q{border-left:3px solid var(--ac);padding-left:12px;margin:.6em 0}
+details{margin:.5em 0}summary{cursor:pointer;font-weight:600}
+hr{border:0;border-top:1px dashed var(--bd);margin:28px 0}
+small{color:var(--mut)}
+</style>
+</head>
+<body>
+<main>
+<h1>AI Agents 是什麼？</h1>
+<p class="sub">給完全沒接觸過的人：5 分鐘看懂 AI Agent　·　資料來源：自建 LLM Wiki（5 篇 ingest）</p>
+
+<section>
+<h2>1. 一句話定義</h2>
+<p class="big">Agent ＝ 讓 LLM 拿著工具，在一個「有終點的迴圈」裡，一直做到目標完成。</p>
+<p>平常的聊天 AI 是「你問、它答」一次結束。Agent 則是「想一步 → 用工具做一步 → 看結果 → 再想下一步」，直到達成目標或碰到停止條件。工具可以是搜尋、計算機、執行程式、查資料庫。<span class="tag">Willison</span><span class="tag">Anthropic</span></p>
+</section>
+
+<section>
+<h2>2. 它由什麼組成？</h2>
+<div class="grid">
+<div class="box"><b>大腦：LLM</b>負責理解、推理、決定下一步。</div>
+<div class="box"><b>手腳：工具 Tools</b>搜尋、API、程式執行，讓 AI 能「真的做事」。</div>
+<div class="box"><b>規則：指令與護欄</b>告訴它該做什麼、不能做什麼。</div>
+</div>
+<p>另一種常見拆法（Lilian Weng）：<b>規劃</b>（把大事拆小事、反思修正）、<b>記憶</b>（短期＝對話內容，長期＝外部資料庫）、<b>工具使用</b>。兩種說法本質相同，只是切法不同。<span class="tag">OpenAI</span><span class="tag">Weng</span></p>
+</section>
+
+<section>
+<h2>3. Workflow 與 Agent 差在哪？</h2>
+<div class="scroll"><table>
+<tr><th></th><th>Workflow（工作流）</th><th>Agent（代理）</th></tr>
+<tr><td>誰決定步驟？</td><td>程式事先寫好路徑</td><td>LLM 邊做邊決定</td></tr>
+<tr><td>優點</td><td>可預測、穩定、好除錯</td><td>彈性高，能處理沒料到的情況</td></tr>
+<tr><td>代價</td><td>遇到新狀況不會變通</td><td>較慢、較貴、較難控制</td></tr>
+<tr><td>適合</td><td>步驟明確的任務</td><td>步驟無法預先寫死的開放任務</td></tr>
+</table></div>
+<p>建議：<b>先從最簡單的做起</b>，只有在確定能改善結果時才增加複雜度。多數情況下，一次 LLM 呼叫加上檢索就夠了。<span class="tag">Anthropic</span></p>
+</section>
+
+<section>
+<h2>4. 邊想邊做：ReAct</h2>
+<p>ReAct 讓模型「推理」和「行動」交錯進行：先想要查什麼，查完再依結果調整下一步。論文中，模型透過維基百科 API 查證，減少了憑空捏造與錯誤累積；在 ALFWorld 與 WebShop 兩個互動任務上，成功率分別比模仿學習與強化學習基準高出 34% 與 10%（絕對值）。<span class="tag">ReAct</span></p>
+<div class="q">生活比喻：你要煮晚餐 → 先想「可能有什麼食材」→ 打開冰箱看 → 發現沒蛋 → 改煮別的。這就是想與做交錯。</div>
+</section>
+
+<section>
+<h2>5. 為什麼需要護欄與檢查？</h2>
+<ul>
+<li>Agent 會自己動手，所以要限制它能做什麼（護欄），而且單一護欄不夠，要多層疊加。</li>
+<li>迴圈要有停止條件，否則會無止盡地跑。</li>
+<li>工具的說明寫得好不好，影響程度不亞於提示詞本身。</li>
+</ul>
+</section>
+
+<section>
+<h2>6. 小測驗</h2>
+<details><summary>Q1：只問一次就回答的聊天機器人，算 Agent 嗎？</summary>通常不算：沒有用工具、沒有迴圈。</details>
+<details><summary>Q2：什麼任務適合用 Workflow 而不是 Agent？</summary>步驟固定、需要穩定可預測的任務。</details>
+<details><summary>Q3：為什麼迴圈要有停止條件？</summary>避免無限執行，也讓成本與風險可控。</details>
+</section>
+
+</main>
+</body>
+</html>
